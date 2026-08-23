@@ -1,0 +1,37 @@
+{
+  "name": "md2docx",
+  "version": "1.0.0",
+  "description": "Convertisseur Markdown → Word (.docx) : titres structurés, en-têtes de page, tableaux, images. 100% client-side.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "convert": "tsx scripts/convert.ts"
+  },
+  "keywords": [
+    "markdown",
+    "docx",
+    "word",
+    "converter"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "docx": "^9.7.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5"
+  },
+  "devDependencies": {
+    "@types/mdast": "^4.0.4",
+    "@types/unist": "^3.0.3",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
+  }
+}

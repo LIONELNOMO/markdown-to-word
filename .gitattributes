@@ -1,0 +1,5 @@
+# Normalise les fins de ligne dans le dépôt (LF), quel que soit l'OS de travail.
+* text=auto
+
+*.png binary
+*.docx binary

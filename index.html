@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Convertisseur Markdown vers Word (.docx) : titres structurés, en-têtes de page, tableaux et images. Tout se passe dans votre navigateur." />
+    <title>Markdown → Word</title>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page__header">
+        <h1>Markdown → Word</h1>
+        <p class="lede">
+          Déposez un fichier <code>.md</code> ou collez votre Markdown : vous récupérez un
+          <code>.docx</code> structuré, avec de vrais styles de titres Word.
+          <strong>Aucun document n'est envoyé sur un serveur.</strong>
+        </p>
+      </header>
+
+      <main class="layout">
+        <section class="panel" aria-labelledby="source-title">
+          <h2 id="source-title" class="panel__title">1. Source</h2>
+
+          <button type="button" class="dropzone" id="dropzone">
+            <span class="dropzone__icon" aria-hidden="true">📄</span>
+            <span class="dropzone__label">Déposez vos fichiers Markdown ici</span>
+            <span class="dropzone__hint">
+              ou cliquez pour les sélectionner — <code>.md</code>, <code>.markdown</code>,
+              <code>.txt</code>. Plusieurs fichiers = conversion par lot.
+            </span>
+          </button>
+          <input
+            type="file"
+            id="file-input"
+            class="visually-hidden"
+            accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain"
+            multiple
+          />
+
+          <label class="field">
+            <span class="field__label">Ou collez votre Markdown</span>
+            <textarea
+              id="markdown-input"
+              class="field__control editor"
+              rows="16"
+              spellcheck="false"
+              placeholder="# Titre du document&#10;&#10;## Sous-titre&#10;&#10;Votre texte, vos **listes**, vos tableaux…"
+            ></textarea>
+          </label>
+        </section>
+
+        <section class="panel" aria-labelledby="options-title">
+          <h2 id="options-title" class="panel__title">2. Options</h2>
+
+          <label class="field">
+            <span class="field__label">Titre du document <span class="field__note">(facultatif)</span></span>
+            <input type="text" id="title-input" class="field__control" placeholder="Déduit du premier titre ou du front matter" />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Auteur <span class="field__note">(facultatif)</span></span>
+            <input type="text" id="author-input" class="field__control" placeholder="Propriété « Auteur » du fichier Word" />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Nom du fichier <span class="field__note">(facultatif)</span></span>
+            <input type="text" id="filename-input" class="field__control" placeholder="document" />
+          </label>
+
+          <fieldset class="checks">
+            <legend class="field__label">Mise en page</legend>
+
+            <label class="check">
+              <input type="checkbox" id="page-header-input" checked />
+              <span>
+                <strong>En-tête et pied de page</strong>
+                <small>Titre du document en haut de page, numérotation en bas.</small>
+              </span>
+            </label>
+
+            <label class="check">
+              <input type="checkbox" id="toc-input" />
+              <span>
+                <strong>Table des matières</strong>
+                <small>Sommaire cliquable des titres 1 à 3, généré par Word à l'ouverture.</small>
+              </span>
+            </label>
+          </fieldset>
+
+          <button type="button" class="button button--primary" id="convert-button">
+            Convertir en Word
+          </button>
+
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+
+          <div class="results" id="results" hidden>
+            <h3 class="results__title">Fichiers générés</h3>
+            <ul class="results__list" id="results-list"></ul>
+          </div>
+
+          <div class="warnings" id="warnings" hidden>
+            <h3 class="warnings__title">Avertissements</h3>
+            <ul class="warnings__list" id="warnings-list"></ul>
+          </div>
+        </section>
+      </main>
+
+      <footer class="page__footer">
+        <p>
+          Pris en charge : titres, gras/italique/barré, listes imbriquées et cases à cocher,
+          tableaux, citations, blocs de code, liens, images, notes de bas de page, front matter YAML.
+        </p>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
