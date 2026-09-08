@@ -3,14 +3,19 @@
 Convertisseur Markdown vers `.docx`, écrit en TypeScript. Trois usages sur le
 même cœur de conversion :
 
-- **automatique** : un `.md` téléchargé, ou du Markdown copié, devient un
+- **l'application web**, installable : on colle du Markdown ou on double-clique
+  un `.md`, on récupère un document Word — en ligne comme hors ligne ;
+- **un service local** : un `.md` téléchargé, ou du Markdown copié, devient un
   document Word sans aucune manipulation ;
-- **une application web** : on dépose un fichier `.md` (ou on colle du Markdown),
-  on récupère un document Word ;
 - **une CLI** : conversion unitaire ou par lot, utilisable en script.
 
 Le traitement est **entièrement local**. Aucun document n'est envoyé sur un
 serveur : l'application web tourne dans le navigateur, sans backend.
+
+> **Local ou en ligne ?** L'application web se déploie et s'installe. Le service
+> de surveillance, lui, **ne peut pas être hébergé** : il lit *votre* dossier de
+> téléchargements et *votre* presse-papiers, auxquels un serveur n'a — et ne doit
+> avoir — aucun accès. Les deux sont complémentaires, pas interchangeables.
 
 ---
 
@@ -35,10 +40,54 @@ npm run dev      # application web sur http://localhost:5173
 
 ---
 
-## Mode automatique
+## L'application en ligne
+
+Le site déployé est une **application installable** (PWA). Trois conséquences
+concrètes, toutes destinées à supprimer des gestes :
+
+**Coller vaut convertir.** `Ctrl+V` n'importe où sur la page : la conversion part
+et le `.docx` se télécharge. Aucun bouton, aucun champ à viser. Dans la zone de
+saisie, le collage reste un collage — on peut vouloir relire avant.
+
+**Double-clic sur un `.md`.** Une fois l'application installée (bouton
+*Installer* dans l'en-tête, proposé par Chrome ou Edge), Windows l'enregistre
+comme gestionnaire des fichiers `.md`. Un double-clic dans l'explorateur produit
+le document Word. C'est l'équivalent en ligne le plus proche d'une surveillance
+de dossier.
+
+**Hors ligne.** La conversion étant entièrement locale, le réseau ne sert qu'à
+charger le code. Un service worker le met en cache : l'application fonctionne
+sans connexion.
+
+| Parcours | Gestes | Navigateurs |
+| -------- | :----: | ----------- |
+| Ouvrir le site, coller | 2 | tous, mobile compris |
+| Double-clic sur le `.md` (application installée) | 1 | Chrome, Edge |
+
+Firefox et Safari n'implémentent pas les gestionnaires de fichiers : le collage y
+fonctionne, le double-clic non.
+
+### Déploiement
+
+Un `npm run build` produit `dist/`, à servir tel quel — aucun backend. Les
+fichiers de `public/` (manifeste, service worker, icônes, `.htaccess`) sont copiés
+à la racine du build.
+
+Le `.htaccess` fourni règle deux points qui, sans lui, cassent silencieusement
+l'installation : le type MIME du manifeste, et la revalidation du service worker
+sans laquelle un nouveau déploiement resterait invisible.
+
+Les icônes sont générées par `node tools/generer-icones.mjs`, sans dépendance.
+
+---
+
+## Mode automatique (local)
 
 L'objectif : supprimer le copier-coller. On récupère du Markdown depuis une
 conversation, et le document Word apparaît.
+
+Contrairement à l'application web, **ce mode ne se déploie pas** : il agit sur
+votre propre machine.
 
 ### Installation
 
@@ -183,7 +232,16 @@ src/
 ├── images/detect.ts       Détection de format et lecture des dimensions
 ├── browser/               Chargement d'images et téléchargement (navigateur)
 ├── node/                  Chargement d'images depuis le disque (CLI)
-└── ui/                    Interface web
+└── ui/
+    ├── app.ts             Interface web
+    ├── pwa.ts             Installation, hors ligne, ouverture des .md
+    └── styles.css
+
+public/                    Copié à la racine du build
+├── manifest.webmanifest   Déclaration de l'application installable
+├── sw.js                  Service worker (hors ligne)
+├── icone-*.png            Icônes générées par tools/generer-icones.mjs
+└── .htaccess              Types MIME et cache côté hébergement
 
 scripts/
 ├── convert.ts             CLI de conversion

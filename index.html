@@ -5,15 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Convertisseur Markdown vers Word (.docx) : titres structurés, en-têtes de page, tableaux et images. Tout se passe dans votre navigateur." />
     <title>Markdown → Word</title>
+
+    <!-- Application installable : icône système, fenêtre autonome, ouverture
+         des fichiers .md depuis l'explorateur. -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#2f5496" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icone-192.png" />
+    <link rel="apple-touch-icon" href="./icone-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Md → Word" />
   </head>
   <body>
     <div class="page">
       <header class="page__header">
-        <h1>Markdown → Word</h1>
+        <div class="page__title">
+          <h1>Markdown → Word</h1>
+          <!-- Révélé par le navigateur uniquement lorsque l'installation est possible. -->
+          <button type="button" class="button button--install" id="install-button" hidden>
+            Installer l'application
+          </button>
+        </div>
         <p class="lede">
-          Déposez un fichier <code>.md</code> ou collez votre Markdown : vous récupérez un
-          <code>.docx</code> structuré, avec de vrais styles de titres Word.
-          <strong>Aucun document n'est envoyé sur un serveur.</strong>
+          <strong>Collez votre Markdown n'importe où sur la page</strong>
+          (<kbd>Ctrl</kbd> + <kbd>V</kbd>) ou déposez un fichier <code>.md</code> : le
+          <code>.docx</code> est produit et téléchargé aussitôt, avec de vrais styles de
+          titres Word. <strong>Aucun document n'est envoyé sur un serveur.</strong>
         </p>
       </header>
 

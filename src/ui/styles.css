@@ -52,6 +52,14 @@ body {
   margin: 0 auto;
 }
 
+.page__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .page__header h1 {
   margin: 0 0 0.35rem;
   font-size: 1.75rem;
@@ -70,6 +78,17 @@ code {
   background: var(--surface-alt);
   font-family: Consolas, "SFMono-Regular", monospace;
   font-size: 0.9em;
+}
+
+kbd {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 0.85em;
+  font-weight: 600;
 }
 
 .layout {
@@ -250,6 +269,26 @@ code {
 
 @media (prefers-color-scheme: dark) {
   .button--primary {
+    color: #10151d;
+  }
+}
+
+.button--install {
+  padding: 0.45rem 0.85rem;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.button--install:hover:not(:disabled) {
+  background: var(--accent);
+  color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .button--install:hover:not(:disabled) {
     color: #10151d;
   }
 }

@@ -25,7 +25,18 @@ interface Elements {
   readonly warningsList: HTMLUListElement;
 }
 
-export function initApp(): void {
+/**
+ * Ce que l'interface expose à l'extérieur.
+ *
+ * Existe pour que l'intégration système (fichiers ouverts depuis le bureau)
+ * emprunte exactement le même chemin que le glisser-déposer, avec les mêmes
+ * contrôles et le même retour visuel.
+ */
+export interface AppApi {
+  readonly convertFiles: (files: readonly File[]) => Promise<void>;
+}
+
+export function initApp(): AppApi {
   const el = collectElements();
   let busy = false;
 
@@ -163,6 +174,46 @@ export function initApp(): void {
   });
 
   bindDragAndDrop(el.dropzone, (files) => void convertFiles(files));
+
+  /**
+   * Coller sur la page vaut conversion.
+   *
+   * C'est le geste central de l'usage réel : le Markdown vient d'une
+   * conversation, on le copie, et il ne devrait rien rester à faire ensuite.
+   * Dans un champ de saisie en revanche, un collage doit rester un collage —
+   * on peut vouloir relire ou retoucher avant de convertir.
+   */
+  window.addEventListener("paste", (event) => {
+    if (busy || isEditable(event.target)) return;
+
+    const data = event.clipboardData;
+    if (data === null) return;
+
+    const files = [...data.files];
+    if (files.length > 0) {
+      event.preventDefault();
+      void convertFiles(files);
+      return;
+    }
+
+    const markdown = data.getData("text/plain");
+    if (markdown.trim() === "") return;
+
+    event.preventDefault();
+    el.markdownInput.value = markdown;
+    void convertPastedMarkdown();
+  });
+
+  return { convertFiles };
+}
+
+/** Un collage dans une zone de saisie appartient à cette zone, pas à la page. */
+function isEditable(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    (target instanceof HTMLElement && target.isContentEditable)
+  );
 }
 
 function bindDragAndDrop(zone: HTMLElement, onDrop: (files: File[]) => void): void {

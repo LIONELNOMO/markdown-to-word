@@ -1,0 +1,16 @@
+# Réglages serveur pour l'hébergement (Apache / LiteSpeed).
+# Ce fichier est copié à la racine du site par le build.
+
+# Certains serveurs ne connaissent pas cette extension et servent le manifeste
+# en « application/octet-stream », ce qui empêche l'installation.
+AddType application/manifest+json .webmanifest
+
+<IfModule mod_headers.c>
+  # Le service worker et la page pilotent les mises à jour : s'ils sont mis en
+  # cache, un nouveau déploiement reste invisible. Ils doivent être revalidés à
+  # chaque visite. Les ressources de « assets/ », dont le nom contient une
+  # empreinte du contenu, gardent au contraire la mise en cache par défaut.
+  <FilesMatch "^(sw\.js|index\.html|manifest\.webmanifest)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>

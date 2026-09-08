@@ -7,3 +7,6 @@
 # Les scripts de commandes Windows exigent des fins de ligne CRLF.
 *.cmd text eol=crlf
 *.bat text eol=crlf
+
+# Fichier de configuration serveur : deploye sur Linux, toujours en LF.
+.htaccess text eol=lf
