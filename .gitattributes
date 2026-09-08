@@ -3,3 +3,7 @@
 
 *.png binary
 *.docx binary
+
+# Les scripts de commandes Windows exigent des fins de ligne CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf

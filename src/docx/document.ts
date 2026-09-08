@@ -31,6 +31,8 @@ export interface BuildResult {
   readonly fileName: string;
   readonly metadata: DocumentMetadata;
   readonly warnings: readonly ConversionWarning[];
+  /** Premier titre rencontré, utilisé pour nommer le fichier en mode automatique. */
+  readonly firstHeading: string | null;
   readonly stats: DocumentStats;
 }
 
@@ -122,6 +124,7 @@ export async function buildDocument(
     fileName: `${deriveBaseName(options.baseName, metadata.title, index.firstHeading)}.docx`,
     metadata,
     warnings,
+    firstHeading: index.firstHeading,
     stats: index.stats,
   };
 }

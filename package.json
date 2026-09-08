@@ -10,7 +10,11 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "convert": "tsx scripts/convert.ts"
+    "convert": "tsx scripts/convert.ts",
+    "watch": "tsx scripts/watch.ts",
+    "clip": "tsx scripts/clip.ts",
+    "auto:installer": "cscript //NoLogo //E:JScript tools/installer.js",
+    "auto:desinstaller": "cscript //NoLogo //E:JScript tools/desinstaller.js"
   },
   "keywords": [
     "markdown",
