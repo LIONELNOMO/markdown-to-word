@@ -273,13 +273,33 @@ kbd {
   }
 }
 
-.button--install {
+.page__title-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button--install,
+.button--ghost {
   padding: 0.45rem 0.85rem;
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
   font-size: 0.85rem;
   white-space: nowrap;
+  text-decoration: none;
+}
+
+.button--ghost:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .button--ghost:hover {
+    color: #10151d;
+  }
 }
 
 .button--install:hover:not(:disabled) {

@@ -1,17 +1,23 @@
 {
   "name": "Markdown → Word",
   "short_name": "Md → Word",
-  "description": "Convertit du Markdown en document Word (.docx) avec de vrais styles de titres. Tout se passe dans le navigateur.",
+  "description": "Convertit du Markdown en document Word (.docx) et compose des présentations PowerPoint (.pptx). Tout se passe dans le navigateur.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "any",
   "background_color": "#f6f7f9",
   "theme_color": "#2f5496",
-  "categories": ["productivity", "utilities"],
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "./icone-192.png",
@@ -36,12 +42,32 @@
     {
       "action": "./",
       "accept": {
-        "text/markdown": [".md", ".markdown", ".mdown", ".mkd"]
+        "text/markdown": [
+          ".md",
+          ".markdown",
+          ".mdown",
+          ".mkd"
+        ]
       },
       "launch_type": "single-client"
     }
   ],
   "launch_handler": {
     "client_mode": "focus-existing"
-  }
+  },
+  "shortcuts": [
+    {
+      "name": "Faire un PowerPoint",
+      "short_name": "PowerPoint",
+      "description": "Composer une présentation et l’exporter en .pptx",
+      "url": "./presentation.html",
+      "icons": [
+        {
+          "src": "./icone-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
 }

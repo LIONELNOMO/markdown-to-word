@@ -18,7 +18,13 @@
 const CACHE = "md2docx-v1";
 
 /** Ce qui permet à l'application de démarrer sans réseau dès la première visite. */
-const SOCLE = ["./", "./manifest.webmanifest", "./icone-192.png", "./icone-512.png"];
+const SOCLE = [
+  "./",
+  "./presentation.html",
+  "./manifest.webmanifest",
+  "./icone-192.png",
+  "./icone-512.png",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

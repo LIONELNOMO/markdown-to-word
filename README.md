@@ -1,10 +1,12 @@
-# Markdown → Word
+# Markdown → Word & PowerPoint
 
-Convertisseur Markdown vers `.docx`, écrit en TypeScript. Trois usages sur le
-même cœur de conversion :
+Markdown vers **Word** (`.docx`) et vers **PowerPoint** (`.pptx`), écrit en
+TypeScript. Quatre usages :
 
 - **l'application web**, installable : on colle du Markdown ou on double-clique
   un `.md`, on récupère un document Word — en ligne comme hors ligne ;
+- **l'éditeur de présentation** : deux modèles graphiques, six dispositions,
+  export `.pptx` ;
 - **un service local** : un `.md` téléchargé, ou du Markdown copié, devient un
   document Word sans aucune manipulation ;
 - **une CLI** : conversion unitaire ou par lot, utilisable en script.
@@ -78,6 +80,68 @@ l'installation : le type MIME du manifeste, et la revalidation du service worker
 sans laquelle un nouveau déploiement resterait invisible.
 
 Les icônes sont générées par `node tools/generer-icones.mjs`, sans dépendance.
+
+Le build produit **deux pages indépendantes** : `index.html` (Word) et
+`presentation.html` (PowerPoint). Chacune ne charge que son propre code.
+
+---
+
+## Présentations PowerPoint
+
+Bouton **Faire un PowerPoint** depuis la page d'accueil, ou `presentation.html`
+directement.
+
+### Deux modèles
+
+| Modèle | Caractère |
+| ------ | --------- |
+| **Azur** | Clair et sobre. Filets fins, grandes marges, bleu institutionnel. |
+| **Nocturne** | Sombre et contrasté. Encarts, accents lumineux, grandes typographies. |
+
+Le modèle s'applique à toute la présentation et se change à tout moment : le
+contenu n'y est pas lié.
+
+### Six dispositions
+
+Couverture, intertitre, titre et contenu, deux colonnes, citation, conclusion.
+Chaque diapositive porte un titre, un sous-titre et des **blocs** — puce ou
+paragraphe, sur deux niveaux — que l'on ajoute, déplace et supprime. Les notes du
+présentateur sont exportées avec le fichier.
+
+L'éditeur ne propose **pas** de formes libres. C'est délibéré : contraindre la
+structure est précisément ce qui permet à un modèle de rester cohérent quel que
+soit le contenu.
+
+### Partir d'un Markdown
+
+Bouton **Importer du Markdown**, ou simplement coller sur la page. Les règles de
+découpe :
+
+| Markdown | Diapositive |
+| -------- | ----------- |
+| Premier `#` | Couverture — le paragraphe qui suit devient le sous-titre |
+| `#` suivants | Intertitre |
+| `##` et au-delà | Nouvelle diapositive de contenu |
+| Listes | Puces, un niveau d'imbrication conservé |
+| `>` citation | Diapositive de citation |
+| `---` | Force une nouvelle diapositive |
+
+Au-delà de sept blocs, une diapositive est scindée en conservant son titre :
+une diapositive surchargée est illisible en projection.
+
+### Aperçu fidèle
+
+L'aperçu n'est pas une approximation. La mise en page est calculée une seule
+fois, par `src/pptx/layout.ts`, et consommée **à la fois** par l'écran et par
+l'export. À 96 pixels par pouce, une diapositive de 13,333 × 7,5 pouces fait
+exactement 1280 × 720 pixels ; une transformation d'échelle l'adapte à la place
+disponible.
+
+Le travail en cours est conservé dans le navigateur : fermer l'onglet ne le perd
+pas.
+
+`pptxgenjs` (368 Ko) n'est chargé **qu'au moment de l'export** : la page de
+l'éditeur pèse 139 Ko.
 
 ---
 
@@ -229,19 +293,30 @@ src/
 │   ├── open.ts            Ouverture dans l'application associée
 │   ├── cli.ts             Options communes aux deux modes
 │   └── report.ts          Restitution des résultats et avertissements
+├── pptx/
+│   ├── types.ts           Modèle d’une présentation
+│   ├── templates.ts       Les deux modèles graphiques
+│   ├── layout.ts          Composition — source unique de la mise en page
+│   ├── deck.ts            Opérations pures sur le modèle
+│   ├── from-markdown.ts   Markdown → diapositives
+│   └── export.ts          Génération du .pptx
 ├── images/detect.ts       Détection de format et lecture des dimensions
 ├── browser/               Chargement d'images et téléchargement (navigateur)
 ├── node/                  Chargement d'images depuis le disque (CLI)
 └── ui/
-    ├── app.ts             Interface web
+    ├── app.ts             Interface web (Word)
+    ├── deck.ts            Éditeur de présentation
     ├── pwa.ts             Installation, hors ligne, ouverture des .md
-    └── styles.css
+    └── styles.css, deck.css
 
 public/                    Copié à la racine du build
 ├── manifest.webmanifest   Déclaration de l'application installable
 ├── sw.js                  Service worker (hors ligne)
 ├── icone-*.png            Icônes générées par tools/generer-icones.mjs
 └── .htaccess              Types MIME et cache côté hébergement
+
+index.html                 Page Word
+presentation.html          Page PowerPoint
 
 scripts/
 ├── convert.ts             CLI de conversion

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Cree des presentations PowerPoint (.pptx) a partir de Markdown, avec deux modeles graphiques. Tout se passe dans votre navigateur."
+    />
+    <title>Markdown → PowerPoint</title>
+
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#2f5496" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icone-192.png" />
+    <link rel="apple-touch-icon" href="./icone-192.png" />
+  </head>
+  <body>
+    <div class="page page--wide">
+      <header class="page__header">
+        <div class="page__title">
+          <h1>Markdown → PowerPoint</h1>
+          <a class="button button--install" href="./index.html">← Convertir en Word</a>
+        </div>
+        <p class="lede">
+          Choisissez un modèle, composez vos diapositives, exportez un
+          <code>.pptx</code>. <strong>Collez du Markdown</strong> pour créer toute la
+          présentation d'un coup. Tout se passe dans votre navigateur.
+        </p>
+      </header>
+
+      <div class="deck-bar">
+        <label class="field field--inline">
+          <span class="field__label">Titre</span>
+          <input type="text" id="deck-title" class="field__control" placeholder="Nouvelle présentation" />
+        </label>
+
+        <label class="field field--inline">
+          <span class="field__label">Auteur</span>
+          <input type="text" id="deck-author" class="field__control" placeholder="Facultatif" />
+        </label>
+
+        <label class="field field--inline field--grow">
+          <span class="field__label">Modèle</span>
+          <select id="template-select" class="field__control"></select>
+        </label>
+
+        <div class="deck-bar__actions">
+          <button type="button" class="button button--link" id="import-button">
+            Importer du Markdown
+          </button>
+          <button type="button" class="button button--link" id="reset-button">Réinitialiser</button>
+          <button type="button" class="button button--primary button--compact" id="export-button">
+            Exporter en PowerPoint
+          </button>
+        </div>
+      </div>
+
+      <p class="status" id="deck-status" role="status" aria-live="polite"></p>
+
+      <main class="deck-layout">
+        <aside class="deck-panel deck-panel--slides" aria-label="Diapositives">
+          <h2 class="panel__title">Diapositives</h2>
+          <ol class="slide-list" id="slide-list"></ol>
+          <button type="button" class="button button--link deck-panel__add" id="add-slide">
+            + Ajouter une diapositive
+          </button>
+        </aside>
+
+        <section class="deck-preview" aria-label="Aperçu">
+          <div class="deck-scaler" id="stage-scaler">
+            <div class="stage" id="stage"></div>
+          </div>
+          <p class="deck-preview__hint">
+            Aperçu à l'échelle réelle : cette mise en page est exactement celle du fichier
+            exporté.
+          </p>
+        </section>
+
+        <aside class="deck-panel deck-panel--inspector" aria-label="Édition de la diapositive">
+          <h2 class="panel__title">Diapositive</h2>
+          <div id="inspector"></div>
+        </aside>
+      </main>
+
+      <footer class="page__footer">
+        <p>
+          Six dispositions : couverture, intertitre, titre et contenu, deux colonnes, citation,
+          conclusion. Les notes du présentateur sont exportées avec le fichier.
+        </p>
+      </footer>
+    </div>
+
+    <dialog class="dialog" id="import-dialog">
+      <form method="dialog" class="dialog__form">
+        <h2 class="dialog__title">Importer du Markdown</h2>
+        <p class="dialog__hint">
+          Les titres de niveau 1 deviennent couverture et intertitres, les titres de niveau 2
+          ouvrent une diapositive, les listes deviennent des puces, les citations une
+          diapositive dédiée. <strong>Les diapositives actuelles seront remplacées.</strong>
+        </p>
+        <textarea
+          id="import-textarea"
+          class="field__control dialog__textarea"
+          rows="14"
+          placeholder="# Titre de la présentation&#10;&#10;Sous-titre&#10;&#10;## Première partie&#10;&#10;- Un point&#10;- Un autre"
+        ></textarea>
+        <div class="dialog__actions">
+          <button type="submit" class="button button--link" value="cancel">Annuler</button>
+          <button type="button" class="button button--primary button--compact" id="import-confirm">
+            Créer les diapositives
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="/src/deck-main.ts"></script>
+  </body>
+</html>

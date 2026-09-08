@@ -10,7 +10,7 @@ AddType application/manifest+json .webmanifest
   # cache, un nouveau déploiement reste invisible. Ils doivent être revalidés à
   # chaque visite. Les ressources de « assets/ », dont le nom contient une
   # empreinte du contenu, gardent au contraire la mise en cache par défaut.
-  <FilesMatch "^(sw\.js|index\.html|manifest\.webmanifest)$">
+  <FilesMatch "^(sw\.js|index\.html|presentation\.html|manifest\.webmanifest)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>

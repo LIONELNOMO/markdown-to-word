@@ -25,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "docx": "^9.7.1",
+    "pptxgenjs": "^4.0.1",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",

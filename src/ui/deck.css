@@ -1,0 +1,357 @@
+/*
+ * Éditeur de présentation.
+ *
+ * Réutilise les jetons de couleur définis dans styles.css : les deux pages
+ * partagent la même charte, et le mode sombre suit sans traitement particulier.
+ */
+
+.page--wide {
+  max-width: 1560px;
+}
+
+/* --- Barre d'outils --- */
+
+.deck-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.field--inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  min-width: 12rem;
+}
+
+.field--grow {
+  flex: 1 1 18rem;
+}
+
+.deck-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.button--compact {
+  width: auto;
+  margin-top: 0;
+  padding: 0.5rem 1rem;
+}
+
+/* --- Disposition générale --- */
+
+.deck-layout {
+  display: grid;
+  grid-template-columns: minmax(15rem, 19rem) minmax(0, 1fr) minmax(17rem, 22rem);
+  gap: 1rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+@media (max-width: 1180px) {
+  .deck-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.deck-panel {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.deck-panel--slides,
+.deck-panel--inspector {
+  /* Les panneaux suivent le défilement ; l'aperçu reste le point d'ancrage. */
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  position: sticky;
+  top: 1rem;
+}
+
+@media (max-width: 1180px) {
+  .deck-panel--slides,
+  .deck-panel--inspector {
+    position: static;
+    max-height: none;
+  }
+}
+
+.deck-panel__add {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+/* --- Liste des diapositives --- */
+
+.slide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slide-item {
+  display: flex;
+  align-items: stretch;
+  gap: 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.slide-item.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.slide-item__select {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.slide-item__number {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.slide-item__label {
+  display: grid;
+  min-width: 0;
+  gap: 0.1rem;
+}
+
+.slide-item__title {
+  overflow: hidden;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slide-item__layout {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.slide-item__tools {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  align-content: center;
+  gap: 0.15rem;
+  padding-right: 0.35rem;
+}
+
+.slide-item__tool,
+.block__tool {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.slide-item__tool:hover:not(:disabled),
+.block__tool:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.slide-item__tool:disabled,
+.block__tool:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* --- Aperçu --- */
+
+.deck-preview {
+  min-width: 0;
+}
+
+.deck-scaler {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/*
+ * La scène fait exactement 1280 × 720 px, soit 13,333 × 7,5 pouces à 96 ppp —
+ * les dimensions réelles d'une diapositive. Une transformation d'échelle
+ * l'adapte à la largeur disponible, ce qui évite toute conversion d'unités dans
+ * le code de rendu.
+ */
+.stage {
+  position: relative;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  transform-origin: top left;
+}
+
+.stage__shape {
+  position: absolute;
+}
+
+.stage__text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.stage__line {
+  margin: 0;
+}
+
+.stage__line--bullet {
+  position: relative;
+}
+
+.stage__line--bullet::before {
+  content: "▪";
+  position: absolute;
+  left: 0.35em;
+  opacity: 0.85;
+}
+
+.deck-preview__hint {
+  margin: 0.6rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* --- Panneau d'édition --- */
+
+.blocks {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.blocks__title {
+  margin: 0 0 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.block {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin-bottom: 0.45rem;
+}
+
+.block__text {
+  flex: 1;
+  min-width: 0;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: inherit;
+  font: inherit;
+  font-size: 0.87rem;
+  resize: vertical;
+}
+
+.block__text:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.block__tools {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 0.15rem;
+  padding-top: 0.15rem;
+}
+
+.blocks__add {
+  width: 100%;
+}
+
+/* --- Boîte de dialogue d'import --- */
+
+.dialog {
+  width: min(46rem, 92vw);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.dialog::backdrop {
+  background: rgb(16 24 40 / 55%);
+}
+
+.dialog__form {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+}
+
+.dialog__title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.dialog__hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.dialog__textarea {
+  font-family: Consolas, "SFMono-Regular", monospace;
+  font-size: 0.85rem;
+  resize: vertical;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

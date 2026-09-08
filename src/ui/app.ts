@@ -1,4 +1,5 @@
-import { convertToDocx, downloadBlob, type BrowserConversionResult } from "../browser/convert.js";
+import { convertToDocx, type BrowserConversionResult } from "../browser/convert.js";
+import { downloadBlob } from "../browser/download.js";
 import { ConversionError, type ConversionOptions, type ConversionWarning } from "../core/types.js";
 
 /** Extensions acceptées ; une extension inconnue est probablement une erreur de dépôt. */
